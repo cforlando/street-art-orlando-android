@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activities.InstallationDetailActivity"
+    tools:showIn="@layout/activity_installation_detail"
+    android:orientation="vertical">
+
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_weight="1"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        map:cameraZoom="18"
+        map:liteMode="true"/>
+
+
+    <LinearLayout
+        android:id="@+id/section_tags"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="#eeeeee"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
+                android:text="Tags"
+                android:textAppearance="?android:listSeparatorTextViewStyle"/>
+
+            <ImageButton
+                android:id="@+id/add_tag_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="#00000000"
+                android:gravity="center_vertical"
+                android:padding="0dp"
+                android:src="@drawable/ic_add_circle_black_24dp"
+                android:tint="#777777"/>
+        </RelativeLayout>
+
+        <me.kaede.tagview.TagView
+            android:id="@+id/tagview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="56dp"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium"
+            app:lineMargin="5dp"
+            app:tagMargin="3dp"
+            app:textPaddingBottom="3dp"
+            app:textPaddingLeft="10dp"
+            app:textPaddingRight="10dp"
+            app:textPaddingTop="3dp"
+            tools:visibility="gone"/>
+
+
+        <TextView
+            android:id="@+id/no_tags_tv"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="No tags yet!"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/section_nearby_art"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:background="#eeeeee"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/margin_medium"
+            android:text="Artwork Nearby"
+            android:textAppearance="?android:listSeparatorTextViewStyle"/>
+
+        <LinearLayout
+            android:id="@+id/nearby_image_layout"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/nearby_image_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                tools:background="@color/colorAccent"/>
+
+            <ImageView
+                android:id="@+id/nearby_image_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                tools:background="@color/colorAccent"/>
+
+            <ImageView
+                android:id="@+id/nearby_image_3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                tools:background="@color/colorAccent"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

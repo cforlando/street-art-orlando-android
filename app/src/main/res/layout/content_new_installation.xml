@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activities.NewInstallationActivity"
+    tools:showIn="@layout/activity_new_installation">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Location"
+            android:paddingLeft="@dimen/margin_medium"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:listSeparatorTextViewStyle"
+            android:background="#eeeeee"/>
+
+        <RelativeLayout
+            android:id="@+id/geo_data_textviews"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingRight="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_medium">
+
+            <LinearLayout
+                android:id="@+id/container_icon_location"
+                android:layout_width="56dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/icon_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    android:layout_gravity="center_vertical|left"
+
+                    android:src="@drawable/ic_location_black_24dp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_toRightOf="@id/container_icon_location"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:text="Neighborhood"/>
+
+            <ImageButton
+                android:id="@+id/button_search_location"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:scaleType="center"
+                android:background="#00ffffff"
+                android:src="@drawable/places_ic_search"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Tags"
+            android:paddingLeft="@dimen/margin_medium"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:listSeparatorTextViewStyle"
+            android:background="#eeeeee"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium">
+
+
+            <me.kaede.tagview.TagView
+                android:id="@+id/tagview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:layout_marginTop="10dp"
+                app:lineMargin="5dp"
+                app:tagMargin="3dp"
+                app:textPaddingBottom="3dp"
+                app:textPaddingLeft="10dp"
+                app:textPaddingRight="10dp"
+                app:textPaddingTop="3dp">
+            </me.kaede.tagview.TagView>
+
+            <EditText
+                android:id="@+id/edit_tag"
+                android:inputType="textAutoComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagview"
+                android:layout_alignParentBottom="true"
+                android:hint="Add tags"
+                android:imeOptions="actionDone"
+                android:imeActionLabel="Add"
+                app:layout_scrollFlags="snap"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
