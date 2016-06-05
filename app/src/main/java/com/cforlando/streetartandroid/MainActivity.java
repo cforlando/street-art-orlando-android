@@ -2,7 +2,9 @@ package com.cforlando.streetartandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,12 +32,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private com.cforlando.streetartandroid.InstallationAdapter mInstallationAdapter;
+    private InstallationAdapter mInstallationAdapter;
+    private CoordinatorLayout mCoordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.content);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -112,7 +118,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EasyImage.openChooserWithGallery(MainActivity.this, "Add a Photo", 0);
+                if (ParseUser.getCurrentUser() == null) {
+                    loadSignIn();
+                } else {
+                    EasyImage.openChooserWithGallery(MainActivity.this, "Add a Photo", 0);
+                }
             }
         });
     }
@@ -126,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_logout);
+        if (ParseUser.getCurrentUser() == null) {
+            menuItem.setTitle(R.string.sign_in);
+        } else {
+            menuItem.setTitle(R.string.sign_out);
+        }
         return true;
     }
 
@@ -141,15 +157,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, LicenseActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_logout) {
-            ParseUser.logOut();
-            Intent intent = new Intent(MainActivity.this,
-                    LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            if (ParseUser.getCurrentUser() == null) {
+                loadSignIn();
+            } else {
+                ParseUser.logOut();
+                Snackbar.make(mCoordinatorLayout,R.string.signed_out_message, Snackbar.LENGTH_SHORT).show();
+                item.setTitle(R.string.sign_in);
+            }
+
+
+//            Intent intent = new Intent(MainActivity.this,
+//                    LoginActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                    | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadSignIn() {
+        Intent i = new Intent(getBaseContext(), LoginActivity.class);
+        startActivity(i);
     }
 
     @Override
