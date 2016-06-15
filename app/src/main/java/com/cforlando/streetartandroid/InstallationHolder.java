@@ -1,6 +1,8 @@
 package com.cforlando.streetartandroid;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -41,11 +43,16 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
             likeButton.setColorFilter(likedColor);
         }
 
+        //Clear likeButtons is user is not signed in
+        if (user == null) {
+            likeButton.setColorFilter(Color.parseColor("#DDDDDD"));
+        }
+
         //Load image into imageView
         Glide.with(itemView.getContext())
                 .load(item.getFirstPhotoUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(photo);
 
         //Set onClickListener for the installation
@@ -61,7 +68,19 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 try {
-                    if (item.isLikedByUser(user)) {
+                    if (user == null) {
+                        Snackbar snackbar = Snackbar
+                                .make(itemView, "Sign in to get started", Snackbar.LENGTH_LONG)
+                                .setAction("Sign In", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent i = new Intent(view.getContext(), LoginActivity.class);
+                                        view.getContext().startActivity(i);
+                                    }
+                                });
+
+                        snackbar.show();
+                    } else if (item.isLikedByUser(user)) {
 
                         //Toggle Like OFF
                         likeButton.setColorFilter(Color.parseColor("#DDDDDD"));
@@ -79,8 +98,11 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
                     e.printStackTrace();
                 }
             }
+
+
         });
 
     }
+
 
 }
