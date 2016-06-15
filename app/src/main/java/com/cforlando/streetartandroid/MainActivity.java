@@ -119,7 +119,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 if (ParseUser.getCurrentUser() == null) {
-                    loadSignIn();
+                    //Prompt user to sign in
+                    Snackbar snackbar = Snackbar
+                            .make(mCoordinatorLayout, "Sign in to add photos", Snackbar.LENGTH_LONG)
+                            .setAction("Sign In", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    loadSignIn();
+                                }
+                            });
+                    snackbar.show();
                 } else {
                     EasyImage.openChooserWithGallery(MainActivity.this, "Add a Photo", 0);
                 }
