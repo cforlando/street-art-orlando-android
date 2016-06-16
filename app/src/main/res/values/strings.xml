@@ -104,4 +104,6 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
     <string name="signed_out_message">You are now signed out.</string>
+    <string name="like_prompt">Like</string>
+    <string name="unlike_prompt">Liked</string>
 </resources>
