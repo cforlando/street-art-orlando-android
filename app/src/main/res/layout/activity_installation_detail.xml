@@ -12,18 +12,23 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="4dp"
         android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:translationZ="4dp"
+        tools:ignore="UnusedAttribute">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
+            android:minHeight="192dp"
             app:contentScrim="?attr/colorPrimary"
-            app:title=" "
-            app:layout_scrollFlags="snap">
+            app:expandedTitleTextAppearance="@android:color/transparent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
+            <!--suppress AndroidElementNotAllowed -->
             <RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -31,27 +36,252 @@
                 android:layout_height="wrap_content">
 
                 <android.support.v4.view.ViewPager
-                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/image_pager"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="256dp"
                     app:layout_collapseMode="none"/>
 
             </RelativeLayout>
 
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_installation_detail"
-             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+
+                <LinearLayout
+                    android:id="@+id/layout_action_visit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_location_24dp"
+                        android:tint="@color/colorPrimaryDark"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="Visit"
+                        android:textAppearance="?android:textAppearanceButton"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/layout_action_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/like_action_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_like_24dp"
+                        android:tint="@color/colorPrimaryDark"/>
+
+                    <TextView
+                        android:id="@+id/like_action_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Like"
+                        android:textAppearance="?android:textAppearanceButton"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/layout_action_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_tag_24dp"
+                        android:tint="@color/colorPrimaryDark"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Tag"
+                        android:textAppearance="?android:textAppearanceButton"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <include layout="@layout/divider_grey"/>
+
+            <LinearLayout
+                android:id="@+id/description_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Description"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Harlem is straight from the hood.  A very good neighborhood where he was free to run around and engage in many adventures with his friends.  He was voted top dog three months in a row by the itty bitty kitty committee and his previous owners would attest that he is a very good boy."
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/primary_text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tags"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+
+                <me.kaede.tagview.TagView
+                    android:id="@+id/tagview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium"
+                    app:lineMargin="5dp"
+                    app:tagMargin="3dp"
+                    app:textPaddingBottom="3dp"
+                    app:textPaddingLeft="10dp"
+                    app:textPaddingRight="10dp"
+                    app:textPaddingTop="3dp"/>
+
+                <TextView
+                    android:id="@+id/no_tags_tv"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="No tags yet!"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <include layout="@layout/divider_grey"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:text="Artwork Nearby"
+                android:textAppearance="?android:textAppearanceMedium"/>
+
+            <LinearLayout
+                android:id="@+id/nearby_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/nearby_image_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    tools:background="@color/colorAccent"/>
+
+                <ImageView
+                    android:id="@+id/nearby_image_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    tools:background="@color/colorAccent"/>
+
+                <ImageView
+                    android:id="@+id/nearby_image_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    tools:background="@color/colorAccent"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
