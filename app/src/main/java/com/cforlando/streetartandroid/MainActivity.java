@@ -1,10 +1,13 @@
 package com.cforlando.streetartandroid;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,8 +28,12 @@ import com.parse.ParseUser;
 import java.io.File;
 import java.util.List;
 
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -115,26 +122,101 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initFab() {
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+
+        final PermissionCallback galleryPermissionCallback = new PermissionCallback() {
             @Override
-            public void onClick(View view) {
-                if (ParseUser.getCurrentUser() == null) {
-                    //Prompt user to sign in
-                    Snackbar snackbar = Snackbar
-                            .make(mCoordinatorLayout, "Sign in to add photos", Snackbar.LENGTH_LONG)
-                            .setAction("Sign In", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    loadSignIn();
-                                }
-                            });
-                    snackbar.show();
-                } else {
-                    EasyImage.openChooserWithGallery(MainActivity.this, "Add a Photo", 0);
-                }
+            public void permissionGranted() {
+                EasyImage.openGallery(MainActivity.this, 0);
             }
-        });
+
+            @Override
+            public void permissionRefused() {
+
+            }
+        };
+        final PermissionCallback cameraPermissionCallback = new PermissionCallback() {
+            @Override
+            public void permissionGranted() {
+                EasyImage.openCamera(MainActivity.this, 0);
+            }
+
+            @Override
+            public void permissionRefused() {
+                showRationale(R.id.action_camera);
+            }
+        };
+
+        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
+        if (fabSpeedDial != null) {
+            fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
+                @Override
+                public boolean onMenuItemSelected(MenuItem menuItem) {
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.action_camera:
+                            if (ParseUser.getCurrentUser() == null) {
+                                showSignInPrompt();
+                            } else {
+
+
+                                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA);
+                                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                                    EasyImage.openCamera(MainActivity.this, 0);
+                                } else {
+                                    Nammu.askForPermission(MainActivity.this,
+                                            Manifest.permission.CAMERA,
+                                            cameraPermissionCallback);
+                                }
+                            }
+                            break;
+
+                        case R.id.action_gallery:
+                            if (ParseUser.getCurrentUser() == null) {
+                                showSignInPrompt();
+                            } else {
+                                Nammu.askForPermission(MainActivity.this,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        galleryPermissionCallback);
+                            }
+                            break;
+                    }
+                    return true;
+                }
+
+            });
+        }
     }
+
+
+    private void showRationale(int action) {
+        switch (action) {
+            case R.id.action_camera:
+                Snackbar
+                        .make(mCoordinatorLayout, R.string.rationale_camera, Snackbar.LENGTH_LONG)
+                        .show();
+                break;
+
+            case R.id.action_gallery:
+                Snackbar
+                        .make(mCoordinatorLayout, R.string.rationale_gallery, Snackbar.LENGTH_LONG)
+                        .show();
+                break;
+        }
+
+    }
+
+    private void showSignInPrompt() {
+        Snackbar snackbar = Snackbar
+                .make(mCoordinatorLayout, R.string.prompt_sign_in, Snackbar.LENGTH_LONG)
+                .setAction(R.string.sign_in, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadSignIn();
+                    }
+                });
+        snackbar.show();
+    }
+
 
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
@@ -173,13 +255,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Snackbar.make(mCoordinatorLayout,R.string.signed_out_message, Snackbar.LENGTH_SHORT).show();
                 item.setTitle(R.string.sign_in);
             }
-
-
-//            Intent intent = new Intent(MainActivity.this,
-//                    LoginActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-//                    | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -195,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
 
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
                 //Some error handling
@@ -241,5 +317,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
