@@ -106,10 +106,10 @@ public class Installation extends ParseObject implements Parcelable {
         // Create the ParseFile
         ParseFile file = new ParseFile("image.jpg", image);
         // Upload the image into Parse Cloud
-        file.save();
+        file.saveInBackground();
 
         add(ParseHelper.INSTALLATION_PHOTOS, file);
-        save();
+        saveInBackground();
     }
 
     public void addPhotos(List<Uri> uris) throws ExecutionException, InterruptedException, ParseException {

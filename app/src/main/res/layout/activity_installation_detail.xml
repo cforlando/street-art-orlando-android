@@ -21,28 +21,19 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:minHeight="192dp"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:contentScrim="@color/colorPrimaryDark"
+            app:layout_scrollFlags="snap">
 
-            <!--suppress AndroidElementNotAllowed -->
-            <RelativeLayout
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/image_pager"
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="256dp"
+                app:layout_collapseMode="none"/>
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/image_pager"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="256dp"
-                    app:layout_collapseMode="none"/>
-
-            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
