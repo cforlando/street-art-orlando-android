@@ -9,16 +9,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class LicenseActivity extends AppCompatActivity {
+    @BindView(R.id.legal) TextView tv;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_license);
+        ButterKnife.bind(this);
 
         String licenseText = GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(this);
 
-        TextView tv = (TextView)findViewById(R.id.legal);
         if (licenseText == null) {
             Toast.makeText(LicenseActivity.this,
                     "Google Play Services not available on this device",
@@ -27,7 +32,7 @@ public class LicenseActivity extends AppCompatActivity {
             tv.setText(licenseText);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

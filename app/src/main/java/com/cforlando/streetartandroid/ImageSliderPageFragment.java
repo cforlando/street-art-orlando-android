@@ -8,10 +8,15 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by benba on 4/21/2016.
  */
 public class ImageSliderPageFragment extends android.support.v4.app.Fragment {
+    @BindView(R.id.slider_image)
+    ImageView imageView;
     private String photoUrl;
 
     public static ImageSliderPageFragment newInstance(String photoUrl) {
@@ -31,12 +36,12 @@ public class ImageSliderPageFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View) inflater.inflate(R.layout.fragment_image_page, container, false);
-        ImageView imageView = (ImageView)view.findViewById(R.id.slider_image);
+        View view = inflater.inflate(R.layout.fragment_image_page, container, false);
+        ButterKnife.bind(this, view);
         Glide.with(this)
-                            .load(photoUrl)
-                            .centerCrop()
-                            .into(imageView);
+                .load(photoUrl)
+                .centerCrop()
+                .into(imageView);
 
         return view;
     }

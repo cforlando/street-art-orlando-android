@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -34,28 +35,95 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.kaede.tagview.Tag;
 import me.kaede.tagview.TagView;
 
-public class InstallationDetailActivity extends AppCompatActivity implements com.cforlando.streetartandroid.AddTagsDialog.AddTagsDialogListener, View.OnClickListener {
+public class InstallationDetailActivity extends AppCompatActivity implements AddTagsDialog.AddTagsDialogListener, View.OnClickListener {
     public static final String EXTRA_INSTALLATION = "Extra_Installation";
 
 
-    private Installation mInstallation;
-
-
-    private ViewPager imagePager;
-    private TagView tagView;
-    private TextView noTagsTv;
-    private CollapsingToolbarLayout collapsingToolbar;
-    private LinearLayout visitActionLayout;
-    private LinearLayout likeActionLayout;
-    private LinearLayout tagActionLayout;
-    private ImageView likeActionImage;
-    private TextView likeActionText;
-    private LinearLayout nearbyImageLayout;
-    private ImageView[] nearbyImageViews = new ImageView[3];
     private ParseUser user = ParseUser.getCurrentUser();
+    private Installation mInstallation;
+    private List<Installation> nearbyInstallations;
+
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.image_pager) ViewPager imagePager;
+    @BindView(R.id.tagview) TagView tagView;
+    @BindView(R.id.no_tags_tv) TextView noTagsTv;
+    @BindView(R.id.layout_action_visit) LinearLayout visitActionLayout;
+    @BindView(R.id.layout_action_like) LinearLayout likeActionLayout;
+    @BindView(R.id.layout_action_tag) LinearLayout tagActionLayout;
+    @BindView(R.id.like_action_image) ImageView likeActionImage;
+    @BindView(R.id.like_action_text) TextView likeActionText;
+    @BindViews({R.id.nearby_image_1, R.id.nearby_image_2, R.id.nearby_image_3}) List<ImageView> nearbyImageViews;
+
+    @OnClick(R.id.layout_action_visit)
+    public void openGoogleNav() {
+        ParseGeoPoint location = mInstallation.getLocation();
+
+        //Open location in Google Maps Walking Nav
+        String uri = String.format(Locale.ENGLISH, "google.navigation:q=%f,%f&mode=w", location.getLatitude(), location.getLongitude());
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.layout_action_like)
+    public void performLikeAction() {
+        try {
+            if (user == null) {
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, "Sign in to get started", Snackbar.LENGTH_LONG)
+                        .setAction("Sign In", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(view.getContext(), LoginActivity.class);
+                                view.getContext().startActivity(i);
+                            }
+                        });
+
+                snackbar.show();
+            } else {
+                if (mInstallation.isLikedByUser(user)) {
+
+                    //Toggle Like OFF
+                    likeActionImage.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+                    likeActionText.setText(R.string.like_prompt);
+                    mInstallation.removeLike(user);
+
+                } else {
+                    //Toggle Like On
+                    likeActionImage.setColorFilter(getResources().getColor(R.color.colorAccent));
+                    likeActionText.setText(R.string.unlike_prompt);
+                    mInstallation.addLike(user);
+                }
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @OnClick(R.id.layout_action_tag)
+    public void showAddTagsDialog() {
+        DialogFragment addTagsDialog = new AddTagsDialog();
+        addTagsDialog.show(getFragmentManager(), "addTags");
+    }
+
+    @OnClick({R.id.nearby_image_1, R.id.nearby_image_2, R.id.nearby_image_3})
+    public void openInstallationDetail(ImageView imageView) {
+        if (nearbyInstallations != null) {
+            Installation installation = nearbyInstallations.get(nearbyImageViews.indexOf(imageView));
+            Intent i = new Intent(this, InstallationDetailActivity.class);
+            i.putExtra(InstallationDetailActivity.EXTRA_INSTALLATION, installation.getObjectId());
+            startActivity(i);
+        }
+    }
 
     public void navigate(Activity activity, String objectId) {
         Intent i = new Intent(activity, InstallationDetailActivity.class);
@@ -68,34 +136,10 @@ public class InstallationDetailActivity extends AppCompatActivity implements com
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_installation_detail);
+        ButterKnife.bind(this);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        imagePager = (ViewPager) findViewById(R.id.image_pager);
-        tagView = (TagView) findViewById(R.id.tagview);
-        noTagsTv = (TextView) findViewById(R.id.no_tags_tv);
-
-        visitActionLayout = (LinearLayout) findViewById(R.id.layout_action_visit);
-        visitActionLayout.setOnClickListener(this);
-
-        likeActionLayout = (LinearLayout) findViewById(R.id.layout_action_like);
-        likeActionLayout.setOnClickListener(this);
-
-        tagActionLayout = (LinearLayout) findViewById(R.id.layout_action_tag);
-        tagActionLayout.setOnClickListener(this);
-
-        likeActionImage = (ImageView) findViewById(R.id.like_action_image);
-        likeActionText = (TextView) findViewById(R.id.like_action_text);
-
-
-        nearbyImageLayout = (LinearLayout) findViewById(R.id.nearby_image_layout);
-        for (int i = 0; i < nearbyImageViews.length; i++) {
-            nearbyImageViews[i] = (ImageView) nearbyImageLayout.getChildAt(i);
-        }
 
         Intent i = this.getIntent();
         String objectID = i.getStringExtra(EXTRA_INSTALLATION);
@@ -175,44 +219,36 @@ public class InstallationDetailActivity extends AppCompatActivity implements com
         //Find and display nearby installations
         ParseGeoPoint location = object.getLocation();
         ParseQuery<Installation> query = ParseQuery.getQuery("Installation");
-        query.whereNear("location", location);
-        query.setLimit(4);
+        query.whereNear("location", location).setLimit(4);
         query.findInBackground(new FindCallback<Installation>() {
             @Override
             public void done(final List<Installation> objects, ParseException e) {
 
+                removeCurrentInstallation(objects);
+                nearbyInstallations = objects;
+                loadImages(objects);
+
+            }
+
+            private void loadImages(List<Installation> objects) {
+                for (int i = 0; i < objects.size(); i++) {
+                    Installation installation = nearbyInstallations.get(i);
+                    String photo = installation.getFirstPhotoUrl();
+                    Glide.with(InstallationDetailActivity.this)
+                            .load(photo)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .into(nearbyImageViews.get(i));
+                }
+            }
+
+            private void removeCurrentInstallation(List<Installation> objects) {
                 for (Iterator<Installation> iterator = objects.iterator(); iterator.hasNext(); ) {
                     Installation installation = iterator.next();
                     if (installation.getObjectId() == object.getObjectId()) {
                         iterator.remove();
                     }
 
-                }
-                if (!objects.isEmpty()) {
-                    for (int i = 0; i < objects.size(); i++) {
-                        final Installation installation = objects.get(i);
-                        List<String> photoUrls = installation.getPhotoUrls();
-                        if (photoUrls.size() > 0) {
-                            String photo = photoUrls.get(0);
-                            Glide.with(InstallationDetailActivity.this)
-                                    .load(photo)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .centerCrop()
-                                    .into(nearbyImageViews[i]);
-
-
-                            nearbyImageViews[i].setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i = new Intent(getBaseContext(), InstallationDetailActivity.class);
-                                    i.putExtra(InstallationDetailActivity.EXTRA_INSTALLATION, installation.getObjectId());
-                                    startActivity(i);
-                                }
-                            });
-                        }
-
-
-                    }
                 }
             }
         });
@@ -222,6 +258,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements com
     protected void onStop() {
         super.onStop();
         mInstallation.addTags(tagView.getTags());
+        mInstallation.saveInBackground();
     }
 
     private Tag buildTag(String tagString) {
@@ -249,54 +286,6 @@ public class InstallationDetailActivity extends AppCompatActivity implements com
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.layout_action_visit:
-                ParseGeoPoint location = mInstallation.getLocation();
 
-                //Open location in Google Maps Walking Nav
-                String uri = String.format(Locale.ENGLISH, "google.navigation:q=%f,%f&mode=w", location.getLatitude(), location.getLongitude());
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                startActivity(intent);
-                break;
-
-            case R.id.layout_action_like:
-                try {
-                    if (user == null) {
-                        Snackbar snackbar = Snackbar
-                                .make(collapsingToolbar, "Sign in to get started", Snackbar.LENGTH_LONG)
-                                .setAction("Sign In", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Intent i = new Intent(view.getContext(), LoginActivity.class);
-                                        view.getContext().startActivity(i);
-                                    }
-                                });
-
-                        snackbar.show();
-                    } else if (mInstallation.isLikedByUser(user)) {
-
-                        //Toggle Like OFF
-                        likeActionImage.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
-                        likeActionText.setText(R.string.like_prompt);
-                        mInstallation.removeLike(user);
-                    } else {
-                        //Toggle Like On
-                        likeActionImage.setColorFilter(getResources().getColor(R.color.colorAccent));
-                        likeActionText.setText(R.string.unlike_prompt);
-                        mInstallation.addLike(user);
-                    }
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case R.id.layout_action_tag:
-                DialogFragment addTagsDialog = new AddTagsDialog();
-                addTagsDialog.show(getFragmentManager(), "addTags");
-                break;
-            default:
-                throw new IllegalArgumentException("Unhandled click for " + v);
-        }
     }
 }

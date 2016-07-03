@@ -44,6 +44,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import me.kaede.tagview.Tag;
 import me.kaede.tagview.TagView;
 import pl.tajchert.nammu.Nammu;
@@ -57,17 +61,67 @@ public class NewInstallationActivity extends AppCompatActivity implements Google
 
     protected GoogleApiClient mGoogleApiClient;
     private Installation mInstallation = new Installation(this);
-    private ImageView headerImage;
-    private TagView tagView;
-    private EditText addTagsEditText;
-    private ImageButton searchLocationButton;
-    private TextView locationText;
-    FloatingActionButton fab;
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.header_image) ImageView headerImage;
+    @BindView(R.id.tagview) TagView tagView;
+    @BindView(R.id.edit_tag) EditText addTagsEditText;
+    @BindView(R.id.button_search_location) ImageButton searchLocationButton;
+    @BindView(R.id.address_tv) TextView addressText;
+    @BindView(R.id.fab) FloatingActionButton fab;
+
+    @OnClick(R.id.button_search_location)
+    public void pickLocation(View v) {
+        int permissionCheck = ContextCompat.checkSelfPermission(NewInstallationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            displayPlacePicker();
+        } else {
+            Nammu.askForPermission(NewInstallationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionCallback() {
+                @Override
+                public void permissionGranted() {
+                    displayPlacePicker();
+                }
+
+                @Override
+                public void permissionRefused() {
+                    Snackbar
+                            .make(getCurrentFocus(), R.string.rationale_fine_location, Snackbar.LENGTH_LONG)
+                            .show();
+                }
+            });
+        }
+    }
+
+    @OnClick(R.id.fab)
+    public void saveInstallation() {
+        File imageFile = (File) this.getIntent().getSerializableExtra("image_file");
+        final Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+        try {
+            mInstallation.addPhoto(bitmap);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mInstallation.addTags(tagView.getTags());
+    }
+
+    @OnEditorAction(R.id.edit_tag)
+    public boolean addNewTag(TextView v, int actionId, KeyEvent event) {
+        boolean handled = false;
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            addTag();
+            handled = true;
+        }
+        return handled;
+    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_installation);
+        ButterKnife.bind(this);
 
         mInstallation.setCreator(ParseUser.getCurrentUser());
 
@@ -76,57 +130,10 @@ public class NewInstallationActivity extends AppCompatActivity implements Google
                 .addApi(Places.GEO_DATA_API)
                 .build();
 
-        setContentView(R.layout.activity_new_installation);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab_speed_dial);
-
-        headerImage = (ImageView) findViewById(R.id.header_image);
-        locationText = (TextView) findViewById(R.id.tv_location);
-
-        searchLocationButton = (ImageButton) findViewById(R.id.button_search_location);
-        searchLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int permissionCheck = ContextCompat.checkSelfPermission(NewInstallationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    displayPlacePicker();
-                } else {
-                    Nammu.askForPermission(NewInstallationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionCallback() {
-                        @Override
-                        public void permissionGranted() {
-                            displayPlacePicker();
-                        }
-
-                        @Override
-                        public void permissionRefused() {
-                            Snackbar
-                                    .make(getCurrentFocus(), R.string.rationale_fine_location, Snackbar.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-                }
-            }
-        });
-
-        tagView = (TagView) findViewById(R.id.tagview);
-        addTagsEditText = (EditText) findViewById(R.id.edit_tag);
-        addTagsEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addTag();
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-
-        Intent i = this.getIntent();
-        File imageFile = (File) i.getSerializableExtra("image_file");
+        File imageFile = (File) this.getIntent().getSerializableExtra("image_file");
 
         Glide.with(this)
                 .load(imageFile)
@@ -140,19 +147,6 @@ public class NewInstallationActivity extends AppCompatActivity implements Google
 
         extractLocationFromExif(path);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mInstallation.addTags(tagView.getTags());
-                try {
-                    mInstallation.addPhoto(bitmap);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private void extractLocationFromExif(String path) {
@@ -168,11 +162,11 @@ public class NewInstallationActivity extends AppCompatActivity implements Google
                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
                 List<Address> listAddresses = geocoder.getFromLocation(coords[0], coords[1], 1);
                 String address = listAddresses.get(0).getAddressLine(0);
-                locationText.setText(address);
+                addressText.setText(address);
                 mInstallation.setAddress(address);
 
             } else {
-                locationText.setText("Add Location");
+                addressText.setText("Add Location");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -214,7 +208,7 @@ public class NewInstallationActivity extends AppCompatActivity implements Google
                 attributions = "";
             }
 
-            locationText.setText(street);
+            addressText.setText(street);
             mInstallation.setAddress(street);
 
             LatLng latLng = place.getLatLng();
