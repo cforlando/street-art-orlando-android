@@ -1,7 +1,6 @@
 package com.cforlando.streetartandroid;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,38 +14,32 @@ import com.cforlando.streetartandroid.Models.Installation;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import butterknife.BindColor;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class InstallationHolder extends RecyclerView.ViewHolder {
 
-    private final int likedColor = itemView.getResources().getColor(R.color.colorAccent);
-    private TextView location;
-    private ImageView photo;
-    private ImageButton likeButton;
-    private TextView propsCount;
+    @BindColor(R.color.colorAccent) int likedColor;
+    @BindColor(R.color.white) int unlikedColor;
+    @BindView(R.id.art_location_tv) TextView location;
+    @BindView(R.id.image) ImageView photo;
+    @BindView(R.id.like_button) ImageButton likeButton;
+    @BindView(R.id.likes_count_tv) TextView likesCount;
+
     private ParseUser user = ParseUser.getCurrentUser();
 
 
     public InstallationHolder(View itemView) {
         super(itemView);
-        location = (TextView) itemView.findViewById(R.id.art_location_tv);
-        photo = (ImageView) itemView.findViewById(R.id.image);
-        propsCount = (TextView) itemView.findViewById(R.id.props_count_tv);
-        likeButton = (ImageButton) itemView.findViewById(R.id.props_button);
+        ButterKnife.bind(this, itemView);
     }
 
     public void bind(final Installation item, final InstallationAdapter.OnItemClickListener listener) throws ParseException {
         //Load textViews
         location.setText(item.getAddress());
-        propsCount.setText(String.valueOf(item.getLikesCount()));
 
-        //Fill in color of likeButton if installation is liked by user
-        if (item.isLikedByUser(user)) {
-            likeButton.setColorFilter(likedColor);
-        }
-
-        //Clear likeButtons is user is not signed in
-        if (user == null) {
-            likeButton.setColorFilter(Color.parseColor("#DDDDDD"));
-        }
+        initLikesViews(item);
 
         //Load image into imageView
         Glide.with(itemView.getContext())
@@ -80,18 +73,21 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
                                 });
 
                         snackbar.show();
-                    } else if (item.isLikedByUser(user)) {
-
-                        //Toggle Like OFF
-                        likeButton.setColorFilter(Color.parseColor("#DDDDDD"));
-                        propsCount.setText(String.valueOf(item.getLikesCount()));
-                        item.removeLike(user);
                     } else {
+                        //If item is liked by user, unlike the item
+                        if (item.isLikedByUser(user)) {
 
-                        //Toggle Like On
-                        likeButton.setColorFilter(likedColor);
-                        propsCount.setText(String.valueOf(item.getLikesCount()));
-                        item.addLike(user);
+                            //Toggle Like OFF
+                            likeButton.setColorFilter(unlikedColor);
+                            item.removeLike(user);
+                            likesCount.setText(String.valueOf(item.getLikesCount()));
+                        } else {
+                            //Toggle Like On
+                            likeButton.setColorFilter(likedColor);
+                            item.addLike(user);
+                            likesCount.setText(String.valueOf(item.getLikesCount()));
+
+                        }
                     }
 
                 } catch (ParseException e) {
@@ -102,6 +98,22 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
 
         });
 
+    }
+
+    private void initLikesViews(Installation item) throws ParseException {
+
+        //Set likesCount string
+        likesCount.setText(String.valueOf(item.getLikesCount()));
+
+        //If user is not signed in, set color to UNLIKE
+        if (user == null) {
+            likeButton.setColorFilter(unlikedColor);
+        } else {
+            //Fill in color of likeButton if installation is liked by user
+            if (item.isLikedByUser(user)) {
+                likeButton.setColorFilter(likedColor);
+            }
+        }
     }
 
 

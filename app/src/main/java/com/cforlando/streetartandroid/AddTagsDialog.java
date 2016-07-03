@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.kaede.tagview.Tag;
 import me.kaede.tagview.TagView;
 
@@ -23,11 +25,11 @@ import me.kaede.tagview.TagView;
  */
 public class AddTagsDialog extends DialogFragment {
 
-    private EditText mEditText;
-    private TagView mTagView;
+    @BindView(R.id.edit_tag) EditText editText;
+    @BindView(R.id.tagview) TagView tagView;
 
     public interface AddTagsDialogListener {
-        public void onReturnTags(List<Tag> tags);
+        void onReturnTags(List<Tag> tags);
     }
 
     AddTagsDialogListener mListener;
@@ -51,9 +53,8 @@ public class AddTagsDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_tags, null);
         builder.setView(dialogView);
+        ButterKnife.bind(this, dialogView);
 
-        final TagView tagView = (TagView) dialogView.findViewById(R.id.tagview);
-        final EditText editText = (EditText) dialogView.findViewById(R.id.edit_tag);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

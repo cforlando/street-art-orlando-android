@@ -33,10 +33,10 @@ public class InstallationAdapter extends ParseRecyclerQueryAdapter<Installation,
     }
 
     @Override
-    public com.cforlando.streetartandroid.InstallationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InstallationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.list_item_installation, parent, false);
-        return new com.cforlando.streetartandroid.InstallationHolder(view);
+        return new InstallationHolder(view);
     }
 
     @Override
@@ -46,25 +46,7 @@ public class InstallationAdapter extends ParseRecyclerQueryAdapter<Installation,
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            holder.propsCountTextView.setText(String.valueOf(installation.getLikesCount()));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            if (installation.isLikedByUser(holder.user)) {
-//                holder.propsButton.setColorFilter(ContextCompat.getColor(mContext, R.color.colorAccent));
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
     }
-
-
-
 
     public interface OnItemClickListener {
         void onItemClick(Installation installation);

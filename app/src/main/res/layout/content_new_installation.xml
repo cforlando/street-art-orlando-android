@@ -46,7 +46,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_location"
+                android:id="@+id/address_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/container_icon_location"
