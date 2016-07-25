@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_licenses"
         android:orderInCategory="1"
-        android:title="Licenses"
+        android:title="@string/licenses_label"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_logout"

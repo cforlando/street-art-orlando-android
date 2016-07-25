@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -59,6 +60,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
@@ -76,6 +78,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_desc_visit"
                         android:padding="4dp"
                         android:src="@drawable/ic_location_24dp"
                         android:tint="@color/colorPrimaryDark"/>
@@ -85,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
-                        android:text="Visit"
+                        android:text="@string/visit_label"
                         android:textAppearance="?android:textAppearanceButton"
                         android:textColor="@color/colorPrimaryDark"/>
 
@@ -106,6 +109,7 @@
                         android:id="@+id/like_action_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_desc_like"
                         android:padding="4dp"
                         android:src="@drawable/ic_like_24dp"
                         android:tint="@color/colorPrimaryDark"/>
@@ -115,7 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Like"
+                        android:text="@string/like_label"
                         android:textAppearance="?android:textAppearanceButton"
                         android:textColor="@color/colorPrimaryDark"/>
 
@@ -135,6 +139,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_desc_tag"
                         android:padding="4dp"
                         android:src="@drawable/ic_tag_24dp"
                         android:tint="@color/colorPrimaryDark"/>
@@ -143,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Tag"
+                        android:text="@string/tag_label"
                         android:textAppearance="?android:textAppearanceButton"
                         android:textColor="@color/colorPrimaryDark"/>
 
@@ -155,7 +160,6 @@
             <include layout="@layout/divider_grey"/>
 
             <LinearLayout
-                android:id="@+id/description_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -164,20 +168,19 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Description"
+                    android:layout_marginLeft="@dimen/section_label_margin"
+                    android:layout_marginStart="@dimen/section_label_margin"
+                    android:layout_marginTop="@dimen/section_label_margin"
+                    android:text="@string/description_label"
                     android:textAppearance="?android:textAppearanceMedium"/>
 
                 <TextView
-                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="@dimen/section_label_margin"
+                    android:layout_marginLeft="@dimen/section_label_margin"
+                    android:layout_marginRight="@dimen/section_label_margin"
                     android:layout_marginTop="8dp"
-                    android:text="Harlem is straight from the hood.  A very good neighborhood where he was free to run around and engage in many adventures with his friends.  He was voted top dog three months in a row by the itty bitty kitty committee and his previous owners would attest that he is a very good boy."
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="@color/primary_text"/>
             </LinearLayout>
@@ -185,13 +188,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_margin="@dimen/section_label_margin"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tags"
+                    android:text="@string/tags_label"
                     android:textAppearance="?android:textAppearanceMedium"/>
 
                 <me.kaede.tagview.TagView
@@ -216,7 +219,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="No tags yet!"
+                    android:text="@string/no_tags_yet"
                     android:visibility="gone"/>
             </LinearLayout>
 
@@ -226,13 +229,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:text="Artwork Nearby"
+                android:layout_marginLeft="@dimen/section_label_margin"
+                android:layout_marginTop="@dimen/section_label_margin"
+                android:text="@string/artwork_nearby_label"
                 android:textAppearance="?android:textAppearanceMedium"/>
 
             <LinearLayout
-                android:id="@+id/nearby_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_gravity="center_vertical"
@@ -247,6 +249,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:clickable="true"
+                    android:contentDescription="@string/content_desc_nearby_artwork"
                     android:scaleType="centerCrop"
                     tools:background="@color/colorAccent"/>
 
@@ -258,6 +261,7 @@
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:clickable="true"
+                    android:contentDescription="@string/content_desc_nearby_artwork"
                     android:scaleType="centerCrop"
                     tools:background="@color/colorAccent"/>
 
@@ -267,6 +271,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:clickable="true"
+                    android:contentDescription="@string/content_desc_nearby_artwork"
                     android:scaleType="centerCrop"
                     tools:background="@color/colorAccent"/>
 

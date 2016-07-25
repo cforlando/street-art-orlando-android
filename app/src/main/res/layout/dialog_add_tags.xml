@@ -26,7 +26,7 @@
         android:id="@+id/edit_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Type tags here"
+        android:hint="@string/type_tags_prompt"
         android:imeActionLabel="Add"
         android:imeOptions="actionDone"
         android:inputType="textAutoComplete"/>

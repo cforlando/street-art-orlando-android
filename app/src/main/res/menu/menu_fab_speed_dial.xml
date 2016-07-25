@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools">
+    >
     <item
         android:id="@+id/action_camera"
         android:icon="@drawable/ic_camera_black_24dp"
-        android:title="Camera" />
+        android:title="@string/camera_fab_label"/>
     <item
         android:id="@+id/action_gallery"
         android:icon="@drawable/ic_gallery_black_24dp"
-        android:title="Gallery"/>
+        android:title="@string/gallery_fab_label"/>
 </menu>
