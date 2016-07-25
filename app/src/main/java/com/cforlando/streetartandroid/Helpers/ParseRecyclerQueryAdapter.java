@@ -57,6 +57,8 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
     private final QueryFactory<T> mFactory;
     private final boolean hasStableIds;
     private final List<T> mItems;
+    private final List<OnDataSetChangedListener> mDataSetListeners;
+    private final List<OnQueryLoadListener<T>> mQueryListeners;
 
     // PRIMARY CONSTRUCTOR
     public ParseRecyclerQueryAdapter(final QueryFactory<T> factory, final boolean hasStableIds) {
@@ -70,11 +72,17 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
         loadObjects();
     }
 
+
+  /*
+   *  REQUIRED RECYCLERVIEW METHOD OVERRIDES
+   */
+
     // ALTERNATE CONSTRUCTOR
     public ParseRecyclerQueryAdapter(final String className, final boolean hasStableIds) {
         this(new QueryFactory<T>() {
 
-            @Override public ParseQuery<T> create() {
+            @Override
+            public ParseQuery<T> create() {
                 return ParseQuery.getQuery(className);
             }
         }, hasStableIds);
@@ -84,16 +92,12 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
     public ParseRecyclerQueryAdapter(final Class<T> clazz, final boolean hasStableIds) {
         this(new QueryFactory<T>() {
 
-            @Override public ParseQuery<T> create() {
+            @Override
+            public ParseQuery<T> create() {
                 return ParseQuery.getQuery(clazz);
             }
         }, hasStableIds);
     }
-
-
-  /*
-   *  REQUIRED RECYCLERVIEW METHOD OVERRIDES
-   */
 
     @Override
     public long getItemId(int position) {
@@ -110,10 +114,6 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
     public T getItem(int position) { return mItems.get(position); }
 
     public List<T> getItems() { return mItems; }
-
-
-
-
 
     /**
      * Apply alterations to query prior to running findInBackground.
@@ -142,14 +142,6 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
         });
     }
 
-
-
-    public interface OnDataSetChangedListener {
-        public void onDataSetChanged();
-    }
-
-    private final List<OnDataSetChangedListener> mDataSetListeners;
-
     public void addOnDataSetChangedListener(OnDataSetChangedListener listener) {
         mDataSetListeners.add(listener);
     }
@@ -165,16 +157,6 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
             mDataSetListeners.get(i).onDataSetChanged();
         }
     }
-
-    public interface OnQueryLoadListener<T> {
-
-        public void onLoaded(
-                List<T> objects, Exception e);
-
-        public void onLoading();
-    }
-
-    private final List<OnQueryLoadListener<T>> mQueryListeners;
 
     public void addOnQueryLoadListener(
             OnQueryLoadListener<T> listener) {
@@ -200,5 +182,17 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
         for (OnQueryLoadListener<T> l : mQueryListeners) {
             l.onLoaded(objects, e);
         }
+    }
+
+    public interface OnDataSetChangedListener {
+        void onDataSetChanged();
+    }
+
+    public interface OnQueryLoadListener<T> {
+
+        void onLoaded(
+                List<T> objects, Exception e);
+
+        void onLoading();
     }
 }

@@ -31,8 +31,19 @@ import me.kaede.tagview.Tag;
 public class Installation extends ParseObject implements Parcelable {
 
     public static final String TAG = "InstallationObject";
+    public static final Creator<Installation> CREATOR = new Creator<Installation>() {
+        @Override
+        public Installation createFromParcel(Parcel in) {
+            return new Installation(in);
+        }
 
+        @Override
+        public Installation[] newArray(int size) {
+            return new Installation[size];
+        }
+    };
     private Context mContext;
+
     // Public default constructor
     public Installation() {
         super();
@@ -46,17 +57,9 @@ public class Installation extends ParseObject implements Parcelable {
     protected Installation(Parcel in) {
     }
 
-    public static final Creator<Installation> CREATOR = new Creator<Installation>() {
-        @Override
-        public Installation createFromParcel(Parcel in) {
-            return new Installation(in);
-        }
-
-        @Override
-        public Installation[] newArray(int size) {
-            return new Installation[size];
-        }
-    };
+    public static ParseQuery<Installation> getQuery() {
+        return ParseQuery.getQuery(Installation.class);
+    }
 
     public Context getContext() {
         return mContext;
@@ -77,15 +80,15 @@ public class Installation extends ParseObject implements Parcelable {
         return getCreator().getUsername();
     }
 
-    public void setLocation(LatLng latLng) {
-        ParseGeoPoint point = new ParseGeoPoint(latLng.latitude, latLng.longitude);
-        put(ParseHelper.INSTALLATION_LOCATION, point);
-    }
-
     public ParseGeoPoint getLocation() {
 
         ParseGeoPoint point = getParseGeoPoint("location");
         return point;
+    }
+
+    public void setLocation(LatLng latLng) {
+        ParseGeoPoint point = new ParseGeoPoint(latLng.latitude, latLng.longitude);
+        put(ParseHelper.INSTALLATION_LOCATION, point);
     }
 
     public String getAddress() {
@@ -151,8 +154,6 @@ public class Installation extends ParseObject implements Parcelable {
         return photos;
     }
 
-
-
     public List<String> getTags() {
         List<String> tags = getList(ParseHelper.INSTALLATION_TAGS);
         return tags;
@@ -209,14 +210,7 @@ public class Installation extends ParseObject implements Parcelable {
         query.whereEqualTo(ParseHelper.LIKE_FROM_USER, user);
         query.whereEqualTo(ParseHelper.LIKE_TO_INSTALLATION, this);
         List<ParseObject> likes = query.find();
-        if (!likes.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    public static ParseQuery<Installation> getQuery() {
-        return ParseQuery.getQuery(Installation.class);
+        return !likes.isEmpty();
     }
 
     @Override

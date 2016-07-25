@@ -3,7 +3,6 @@ package com.cforlando.streetartandroid;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -35,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -44,12 +44,12 @@ import me.kaede.tagview.TagView;
 
 public class InstallationDetailActivity extends AppCompatActivity implements AddTagsDialog.AddTagsDialogListener, View.OnClickListener {
     public static final String EXTRA_INSTALLATION = "Extra_Installation";
-
-
-    private ParseUser user = ParseUser.getCurrentUser();
-    private Installation mInstallation;
-    private List<Installation> nearbyInstallations;
-
+    @BindColor(R.color.colorAccent)
+    int colorAccent;
+    @BindColor(R.color.colorPrimaryDark)
+    int colorPrimaryDark;
+    @BindColor(R.color.white)
+    int colorWhite;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -62,6 +62,9 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
     @BindView(R.id.like_action_image) ImageView likeActionImage;
     @BindView(R.id.like_action_text) TextView likeActionText;
     @BindViews({R.id.nearby_image_1, R.id.nearby_image_2, R.id.nearby_image_3}) List<ImageView> nearbyImageViews;
+    private ParseUser user = ParseUser.getCurrentUser();
+    private Installation mInstallation;
+    private List<Installation> nearbyInstallations;
 
     @OnClick(R.id.layout_action_visit)
     public void openGoogleNav() {
@@ -92,13 +95,13 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
                 if (mInstallation.isLikedByUser(user)) {
 
                     //Toggle Like OFF
-                    likeActionImage.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+                    likeActionImage.setColorFilter(colorPrimaryDark);
                     likeActionText.setText(R.string.like_prompt);
                     mInstallation.removeLike(user);
 
                 } else {
                     //Toggle Like On
-                    likeActionImage.setColorFilter(getResources().getColor(R.color.colorAccent));
+                    likeActionImage.setColorFilter(colorAccent);
                     likeActionText.setText(R.string.unlike_prompt);
                     mInstallation.addLike(user);
                 }
@@ -172,7 +175,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
         //Fill in color of likeButton if installation is liked by user
         try {
             if (mInstallation.isLikedByUser(user)) {
-                likeActionImage.setColorFilter(getResources().getColor(R.color.colorAccent));
+                likeActionImage.setColorFilter(colorAccent);
                 likeActionText.setText(R.string.unlike_prompt);
             }
         } catch (ParseException e) {
@@ -245,7 +248,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
             private void removeCurrentInstallation(List<Installation> objects) {
                 for (Iterator<Installation> iterator = objects.iterator(); iterator.hasNext(); ) {
                     Installation installation = iterator.next();
-                    if (installation.getObjectId() == object.getObjectId()) {
+                    if (installation.getObjectId().equals(object.getObjectId())) {
                         iterator.remove();
                     }
 
@@ -264,8 +267,8 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
     private Tag buildTag(String tagString) {
 
         Tag tag = new Tag(tagString);
-        tag.tagTextColor = Color.parseColor("#FFFFFF");
-        tag.layoutColor = Color.parseColor("#673AB7");
+        tag.tagTextColor = colorWhite;
+        tag.layoutColor = colorPrimaryDark;
         tag.isDeletable = false;
 
         return tag;
@@ -274,8 +277,8 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
     @Override
     public void onReturnTags(List<Tag> tags) {
         for (Tag tag : tags) {
-            tag.tagTextColor = Color.parseColor("#FFFFFF");
-            tag.layoutColor = Color.parseColor("#673AB7");
+            tag.tagTextColor = colorWhite;
+            tag.layoutColor = colorPrimaryDark;
             tag.isDeletable = true;
             tagView.addTag(tag);
         }

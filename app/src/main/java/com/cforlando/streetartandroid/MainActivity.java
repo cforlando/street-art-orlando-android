@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity  {
 
                                         @Override
                                         public void permissionRefused() {
-
+                                            showRationale(R.id.action_gallery);
                                         }
                                     });
                         }

@@ -37,7 +37,7 @@ public class GeoDegree {
             }
 
         }
-    };
+    }
 
     private Float convertToDegree(String stringDMS){
         Float result = null;
@@ -63,7 +63,7 @@ public class GeoDegree {
         return result;
 
 
-    };
+    }
 
     public boolean isValid()
     {
