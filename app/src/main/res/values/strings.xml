@@ -31,4 +31,5 @@
     <string name="type_tags_prompt">Type tags here</string>
     <string name="add_location_label">Add Location</string>
     <string name="add_artwork_label">Add Artwork</string>
+    <string name="facebook_app_id">136520006783605</string>
 </resources>

@@ -59,9 +59,15 @@
             <meta-data
                 android:name="com.parse.ui.ParseLoginActivity.APP_LOGO"
                 android:resource="@drawable/login_logo"/>
+            <!--<meta-data-->
+            <!--android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_ENABLED"-->
+            <!--android:value="true"/>-->
             <meta-data
-                android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_ENABLED"
+                android:name="com.parse.ui.ParseLoginActivity.FACEBOOK_LOGIN_ENABLED"
                 android:value="true"/>
+            <meta-data
+                android:name="com.parse.ui.ParseLoginActivity.FACEBOOK_LOGIN_PERMISSIONS"
+                android:resource="@array/facebook_permissions"/>
         </activity>
         <activity
             android:name=".InstallationDetailActivity"
@@ -77,11 +83,15 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="bYvlfvpOJaFBoO7MTyXuYNJfwYg80rtGGTvVrFPq"/>
         <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
+
 
         <activity android:name=".LicenseActivity">
         </activity>

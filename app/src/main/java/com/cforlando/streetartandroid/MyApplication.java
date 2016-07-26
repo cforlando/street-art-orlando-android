@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 
 import com.cforlando.streetartandroid.Models.Installation;
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 
 import pl.tajchert.nammu.Nammu;
@@ -34,5 +35,9 @@ public class MyApplication extends Application {
         // Register parse models
         ParseObject.registerSubclass(Installation.class);
         Parse.initialize(this);
+
+        // Initialize ParseFacebookUtils
+        ParseFacebookUtils.initialize(this);
+
     }
 }

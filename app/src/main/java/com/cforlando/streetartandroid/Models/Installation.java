@@ -131,7 +131,6 @@ public class Installation extends ParseObject implements Parcelable {
     public List<String> getPhotoUrls() {
         List<String> urls = new ArrayList<String>();
         List<ParseFile> photos = getList(ParseHelper.INSTALLATION_PHOTOS);
-
         if (photos != null) {
             for (ParseFile file : photos) {
                 urls.add(file.getUrl());

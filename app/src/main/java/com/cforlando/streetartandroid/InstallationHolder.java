@@ -36,17 +36,21 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final Installation item, final InstallationAdapter.OnItemClickListener listener) throws ParseException {
-        //Load textViews
-        location.setText(item.getAddress());
 
-        initLikesViews(item);
 
         //Load image into imageView
         Glide.with(itemView.getContext())
                 .load(item.getFirstPhotoUrl())
+                .asBitmap()
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(photo);
+
+        //Load textViews
+        location.setText(item.getAddress());
+
+        // Load like button and like count
+        initLikesViews(item);
 
         //Set onClickListener for the installation
         itemView.setOnClickListener(new View.OnClickListener() {
