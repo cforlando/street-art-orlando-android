@@ -156,6 +156,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
 
                     //Set Title using Installation.Address
                     collapsingToolbar.setTitle(object.getAddress());
+                    collapsingToolbar.setTitleEnabled(true);
 
                     loadImageViewPager(object);
                     loadLikeActionView();
