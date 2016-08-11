@@ -29,6 +29,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ import butterknife.OnClick;
 import me.kaede.tagview.Tag;
 import me.kaede.tagview.TagView;
 
-public class InstallationDetailActivity extends AppCompatActivity implements AddTagsDialog.AddTagsDialogListener, View.OnClickListener {
+public class InstallationDetailActivity extends AppCompatActivity implements AddTagsDialog.AddTagsDialogListener {
     public static final String EXTRA_INSTALLATION = "Extra_Installation";
     @BindColor(R.color.colorAccent)
     int colorAccent;
@@ -50,18 +51,34 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
     int colorPrimaryDark;
     @BindColor(R.color.white)
     int colorWhite;
-    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbar;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.image_pager) ViewPager imagePager;
-    @BindView(R.id.tagview) TagView tagView;
-    @BindView(R.id.no_tags_tv) TextView noTagsTv;
-    @BindView(R.id.layout_action_visit) LinearLayout visitActionLayout;
-    @BindView(R.id.layout_action_like) LinearLayout likeActionLayout;
-    @BindView(R.id.layout_action_tag) LinearLayout tagActionLayout;
-    @BindView(R.id.like_action_image) ImageView likeActionImage;
-    @BindView(R.id.like_action_text) TextView likeActionText;
-    @BindViews({R.id.nearby_image_1, R.id.nearby_image_2, R.id.nearby_image_3}) List<ImageView> nearbyImageViews;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.address)
+    TextView address;
+    @BindView(R.id.image_pager)
+    ViewPager imagePager;
+    @BindView(R.id.pageIndicator)
+    CirclePageIndicator pageIndicator;
+    @BindView(R.id.tagview)
+    TagView tagView;
+    @BindView(R.id.no_tags_tv)
+    TextView noTagsTv;
+    @BindView(R.id.layout_action_visit)
+    LinearLayout visitActionLayout;
+    @BindView(R.id.layout_action_like)
+    LinearLayout likeActionLayout;
+    @BindView(R.id.layout_action_tag)
+    LinearLayout tagActionLayout;
+    @BindView(R.id.like_action_image)
+    ImageView likeActionImage;
+    @BindView(R.id.like_action_text)
+    TextView likeActionText;
+    @BindViews({R.id.nearby_image_1, R.id.nearby_image_2, R.id.nearby_image_3})
+    List<ImageView> nearbyImageViews;
     private ParseUser user = ParseUser.getCurrentUser();
     private Installation mInstallation;
     private List<Installation> nearbyInstallations;
@@ -78,6 +95,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
 
     @OnClick(R.id.layout_action_like)
     public void performLikeAction() {
+
         try {
             if (user == null) {
                 Snackbar snackbar = Snackbar
@@ -143,9 +161,10 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Intent i = this.getIntent();
-        String objectID = i.getStringExtra(EXTRA_INSTALLATION);
+        final String objectID = i.getStringExtra(EXTRA_INSTALLATION);
 
         ParseQuery<Installation> query = ParseQuery.getQuery("Installation");
         query.getInBackground(objectID, new GetCallback<Installation>() {
@@ -155,8 +174,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
                     mInstallation = object;
 
                     //Set Title using Installation.Address
-                    collapsingToolbar.setTitle(object.getAddress());
-                    collapsingToolbar.setTitleEnabled(true);
+                    address.setText(object.getAddress());
 
                     loadImageViewPager(object);
                     loadLikeActionView();
@@ -192,7 +210,8 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
             @Override
             public Fragment getItem(int position) {
                 String photoUrl = photoUrls.get(position);
-                return ImageSliderPageFragment.newInstance(photoUrl);
+                Fragment fragment = ImageSliderPageFragment.newInstance(photoUrl);
+                return fragment;
             }
 
             @Override
@@ -200,16 +219,20 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
                 return photoUrls.size();
             }
         });
+        if (imagePager.getAdapter().getCount() <= 1) {
+            pageIndicator.setVisibility(View.GONE);
+        } else {
+            pageIndicator.setViewPager(imagePager);
+        }
     }
 
     private void loadTagsIntoView(Installation object) {
         List<String> tagStrings = object.getTags();
 
         //Display "No Tags Yet" if no tags
-        if (tagStrings == null) {
+        if (tagStrings.isEmpty()) {
             tagView.setVisibility(View.GONE);
             noTagsTv.setVisibility(View.VISIBLE);
-
         } else {
             noTagsTv.setVisibility(View.GONE);
             for (String tagString : tagStrings) {
@@ -238,6 +261,7 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
                 for (int i = 0; i < objects.size(); i++) {
                     Installation installation = nearbyInstallations.get(i);
                     String photo = installation.getFirstPhotoUrl();
+                    nearbyImageViews.get(i).setVisibility(View.VISIBLE);
                     Glide.with(InstallationDetailActivity.this)
                             .load(photo)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -278,18 +302,11 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
     @Override
     public void onReturnTags(List<Tag> tags) {
         for (Tag tag : tags) {
-            tag.tagTextColor = colorWhite;
-            tag.layoutColor = colorPrimaryDark;
             tag.isDeletable = true;
             tagView.addTag(tag);
         }
 
         noTagsTv.setVisibility(View.GONE);
         tagView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 }

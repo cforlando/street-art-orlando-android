@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@id/coordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -21,29 +22,110 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="snap">
+            app:layout_scrollFlags="snap"
+            app:titleEnabled="false">
 
-            <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/header_image"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
+                <include
+                    layout="@layout/image_view_pager"
                     android:layout_width="match_parent"
-                    android:layout_height="256dp"
-                    app:layout_collapseMode="none"/>
+                    android:layout_height="256dp"/>
 
-            </RelativeLayout>
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimaryDark"
+                    android:paddingBottom="24dp"
+                    android:paddingEnd="64dp"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="64dp"
+                    android:paddingStart="48dp"
+                    android:paddingTop="24dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@android:color/white"
+                    tools:text="401 S Summerlin Ave"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:background="@android:color/background_light"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/margin_small"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="@dimen/margin_small">
+
+
+                    <LinearLayout
+                        android:id="@+id/layout_action_edit_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/content_desc_edit_location"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_location_24dp"
+                            android:tint="@color/colorPrimaryDark"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
+                            android:text="@string/edit_location_label"
+                            android:textAppearance="?android:textAppearanceButton"
+                            android:textColor="@color/colorPrimaryDark"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_action_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/content_desc_tag"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_tag_24dp"
+                            android:tint="@color/colorPrimaryDark"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/add_tags_label"
+                            android:textAppearance="?android:textAppearanceButton"
+                            android:textColor="@color/colorPrimaryDark"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </LinearLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:title="@string/add_artwork_label"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
@@ -51,8 +133,9 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_new_installation"
-             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <include
+        layout="@layout/content_new_installation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -61,7 +144,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:src="@drawable/ic_done_24px"
-        app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchor="@+id/address"
+        app:layout_anchorGravity="top|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

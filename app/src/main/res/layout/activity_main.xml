@@ -46,18 +46,14 @@
                  android:layout_width="match_parent"
                  android:layout_height="match_parent">
 
-        <io.github.yavski.fabspeeddial.FabSpeedDial
-            android:id="@+id/fab_speed_dial"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            app:fabBackgroundTint="@color/colorAccent"
-            app:fabDrawableTint="@android:color/black"
-            app:fabGravity="bottom_end"
-            app:fabMenu="@menu/menu_fab_speed_dial"
-            app:miniFabBackgroundTint="@android:color/white"
-            app:miniFabDrawableTint="@color/colorPrimary"
-            app:miniFabTitleTextColor="@color/colorPrimary"/>
+            android:layout_margin="@dimen/fab_margin"
+            android:clickable="true"
+            android:src="@drawable/ic_add_black_48dp_00"/>
 
     </FrameLayout>
 

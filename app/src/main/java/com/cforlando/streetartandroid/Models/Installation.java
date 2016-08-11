@@ -2,11 +2,10 @@ package com.cforlando.streetartandroid.Models;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.bumptech.glide.Glide;
 import com.cforlando.streetartandroid.Helpers.ParseHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
@@ -112,19 +111,13 @@ public class Installation extends ParseObject implements Parcelable {
         file.saveInBackground();
 
         add(ParseHelper.INSTALLATION_PHOTOS, file);
-        saveInBackground();
     }
 
-    public void addPhotos(List<Uri> uris) throws ExecutionException, InterruptedException, ParseException {
-        for (Uri uri : uris) {
-            Bitmap theBitmap = Glide.
-                    with(mContext).
-                    load(uri).
-                    asBitmap().
-                    into(-1, -1).
-                    get();
-
-            addPhoto(theBitmap);
+    public void addPhotos(List<String> paths) throws ExecutionException, InterruptedException, ParseException {
+        for (String path : paths) {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(path, bmOptions);
+            addPhoto(bitmap);
         }
     }
 
@@ -203,6 +196,7 @@ public class Installation extends ParseObject implements Parcelable {
         int likesCount = getInt("likesCount");
         return likesCount;
     }
+
 
     public boolean isLikedByUser(ParseUser user) throws ParseException {
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ParseHelper.LIKE_CLASS);

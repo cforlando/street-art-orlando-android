@@ -1,12 +1,10 @@
 package com.cforlando.streetartandroid;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,21 +15,19 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.cforlando.streetartandroid.Helpers.ParseRecyclerQueryAdapter;
+import com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity;
+import com.nguyenhoanglam.imagepicker.model.Image;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.github.yavski.fabspeeddial.FabSpeedDial;
-import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
+import butterknife.OnClick;
 import pl.tajchert.nammu.Nammu;
-import pl.tajchert.nammu.PermissionCallback;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -39,10 +35,19 @@ public class MainActivity extends AppCompatActivity  {
     @BindView(R.id.recycler) RecyclerView recyclerView;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.fab_speed_dial) FabSpeedDial fabSpeedDial;
-
-
+    @BindView(R.id.fab)
+    FloatingActionButton addPhotoFab;
+    private int REQUEST_CODE_IMAGE_PICKER = 2000;
     private InstallationAdapter mInstallationAdapter;
+
+    @OnClick(R.id.fab)
+    public void startPhotoPicker() {
+        Intent intent = new Intent(this, ImagePickerActivity.class);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
+        startActivityForResult(intent, REQUEST_CODE_IMAGE_PICKER);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,6 @@ public class MainActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        initFab();
 
         setRecyclerAdapter(recyclerView);
 
@@ -107,64 +111,6 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
-    }
-
-    private void initFab() {
-
-        fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
-            @Override
-            public boolean onMenuItemSelected(MenuItem menuItem) {
-
-                switch (menuItem.getItemId()) {
-                    case R.id.action_camera:
-                        if (ParseUser.getCurrentUser() == null) {
-                            showSignInPrompt();
-                        } else {
-                            int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA);
-                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                                EasyImage.openCamera(MainActivity.this, 0);
-                            } else {
-                                Nammu.askForPermission(MainActivity.this,
-                                        Manifest.permission.CAMERA,
-                                        new PermissionCallback() {
-                                            @Override
-                                            public void permissionGranted() {
-                                                EasyImage.openCamera(MainActivity.this, 0);
-                                            }
-
-                                            @Override
-                                            public void permissionRefused() {
-                                                showRationale(R.id.action_camera);
-                                            }
-                                        });
-                            }
-                        }
-                        break;
-
-                    case R.id.action_gallery:
-                        if (ParseUser.getCurrentUser() == null) {
-                            showSignInPrompt();
-                        } else {
-                            Nammu.askForPermission(MainActivity.this,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                                    new PermissionCallback() {
-                                        @Override
-                                        public void permissionGranted() {
-                                            EasyImage.openGallery(MainActivity.this, 0);
-                                        }
-
-                                        @Override
-                                        public void permissionRefused() {
-                                            showRationale(R.id.action_gallery);
-                                        }
-                                    });
-                        }
-                        break;
-                }
-                return true;
-            }
-
-        });
     }
 
 
@@ -242,32 +188,18 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_IMAGE_PICKER && resultCode == RESULT_OK && data != null) {
+            ArrayList<Image> images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
+            ArrayList<String> imagePaths = new ArrayList<String>();
 
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
-
-            @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
-                //Some error handling
+            for (int i = 0, l = images.size(); i < l; i++) {
+                imagePaths.add(images.get(i).getPath());
             }
+            Intent intent = new Intent(getApplicationContext(), NewInstallationActivity.class);
+            intent.putStringArrayListExtra(NewInstallationActivity.IMAGE_PATHS, imagePaths);
+            startActivity(intent);
+        }
 
-            @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
-                //Handle the image
-                Intent intent = new Intent(getApplicationContext(), NewInstallationActivity.class);
-                intent.putExtra("image_file", imageFile);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onCanceled(EasyImage.ImageSource source, int type) {
-                //Cancel handling, you might wanna remove taken photo if it was canceled
-                if (source == EasyImage.ImageSource.CAMERA) {
-                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(MainActivity.this);
-                    if (photoFile != null) photoFile.delete();
-                }
-            }
-        });
     }
 
 

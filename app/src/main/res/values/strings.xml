@@ -22,7 +22,7 @@
     <string name="artwork_nearby_label">Artwork Nearby</string>
     <string name="content_desc_nearby_artwork">Nearby Artwork</string>
     <string name="tags_label">Tags</string>
-    <string name="no_tags_yet">No tags yet!</string>
+    <string name="no_tags_yet">Add tags to describe this artwork.</string>
     <string name="licenses_label">Licenses</string>
     <string name="camera_fab_label">Camera</string>
     <string name="gallery_fab_label">Gallery</string>
@@ -32,4 +32,6 @@
     <string name="add_location_label">Add Location</string>
     <string name="add_artwork_label">Add Artwork</string>
     <string name="facebook_app_id">136520006783605</string>
+    <string name="edit_location_label">Edit Location</string>
+    <string name="content_desc_edit_location">Edit location of artwork</string>
 </resources>

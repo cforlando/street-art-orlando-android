@@ -14,32 +14,150 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
             android:fitsSystemWindows="true"
-            app:contentScrim="@color/colorPrimaryDark"
             app:layout_scrollFlags="snap"
             app:titleEnabled="false">
 
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/image_pager"
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="256dp"
-                app:layout_collapseMode="none"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/image_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"/>
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimaryDark"
+                    android:paddingBottom="24dp"
+                    android:paddingEnd="64dp"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="64dp"
+                    android:paddingStart="48dp"
+                    android:paddingTop="24dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@android:color/white"
+                    tools:text="401 S Summerlin Ave"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:background="@android:color/background_light"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+
+                    <LinearLayout
+                        android:id="@+id/layout_action_visit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/content_desc_visit"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_location_24dp"
+                            android:tint="@color/colorPrimaryDark"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
+                            android:text="@string/visit_label"
+                            android:textAppearance="?android:textAppearanceButton"
+                            android:textColor="@color/colorPrimaryDark"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/layout_action_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/like_action_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/content_desc_like"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_liked_24dp"
+                            android:tint="@color/colorPrimaryDark"/>
+
+                        <TextView
+                            android:id="@+id/like_action_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/like_label"
+                            android:textAppearance="?android:textAppearanceButton"
+                            android:textColor="@color/colorPrimaryDark"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/layout_action_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/content_desc_tag"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_tag_24dp"
+                            android:tint="@color/colorPrimaryDark"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/tag_label"
+                            android:textAppearance="?android:textAppearanceButton"
+                            android:textColor="@color/colorPrimaryDark"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </LinearLayout>
 
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="pin"/>
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -47,7 +165,6 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -55,178 +172,49 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-
-                <LinearLayout
-                    android:id="@+id/layout_action_visit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/content_desc_visit"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_location_24dp"
-                        android:tint="@color/colorPrimaryDark"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:gravity="center"
-                        android:text="@string/visit_label"
-                        android:textAppearance="?android:textAppearanceButton"
-                        android:textColor="@color/colorPrimaryDark"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/layout_action_like"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/like_action_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/content_desc_like"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_like_24dp"
-                        android:tint="@color/colorPrimaryDark"/>
-
-                    <TextView
-                        android:id="@+id/like_action_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/like_label"
-                        android:textAppearance="?android:textAppearanceButton"
-                        android:textColor="@color/colorPrimaryDark"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/layout_action_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/content_desc_tag"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_tag_24dp"
-                        android:tint="@color/colorPrimaryDark"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/tag_label"
-                        android:textAppearance="?android:textAppearanceButton"
-                        android:textColor="@color/colorPrimaryDark"/>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <include layout="@layout/divider_grey"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/section_label_margin"
-                    android:layout_marginStart="@dimen/section_label_margin"
-                    android:layout_marginTop="@dimen/section_label_margin"
-                    android:text="@string/description_label"
-                    android:textAppearance="?android:textAppearanceMedium"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/section_label_margin"
-                    android:layout_marginLeft="@dimen/section_label_margin"
-                    android:layout_marginRight="@dimen/section_label_margin"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="@color/primary_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/section_label_margin"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tags_label"
-                    android:textAppearance="?android:textAppearanceMedium"/>
-
-                <me.kaede.tagview.TagView
-                    android:id="@+id/tagview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="@dimen/margin_medium"
-                    android:paddingRight="@dimen/margin_medium"
-                    app:lineMargin="5dp"
-                    app:tagMargin="3dp"
-                    app:textPaddingBottom="3dp"
-                    app:textPaddingLeft="10dp"
-                    app:textPaddingRight="10dp"
-                    app:textPaddingTop="3dp"/>
-
-                <TextView
-                    android:id="@+id/no_tags_tv"
-                    style="@style/TextAppearance.AppCompat.Headline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="@string/no_tags_yet"
-                    android:visibility="gone"/>
-            </LinearLayout>
 
             <include layout="@layout/divider_grey"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/section_label_margin"
+                android:layout_marginTop="@dimen/section_label_margin"
+                android:text="@string/tags_label"
+                android:textAppearance="?android:textAppearanceMedium"/>
+
+            <me.kaede.tagview.TagView
+                android:id="@+id/tagview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                app:lineMargin="5dp"
+                app:tagMargin="3dp"
+                app:textPaddingBottom="3dp"
+                app:textPaddingLeft="10dp"
+                app:textPaddingRight="10dp"
+                app:textPaddingTop="3dp"/>
+
+            <TextView
+                android:id="@+id/no_tags_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:text="@string/no_tags_yet"
+                android:visibility="gone"/>
+
+            <include layout="@layout/divider_grey"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/section_label_margin"
                 android:layout_marginTop="@dimen/section_label_margin"
                 android:text="@string/artwork_nearby_label"
@@ -236,42 +224,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
-                android:orientation="horizontal">
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
 
                 <ImageView
                     android:id="@+id/nearby_image_1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:layout_marginRight="2dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:contentDescription="@string/content_desc_nearby_artwork"
                     android:scaleType="centerCrop"
-                    tools:background="@color/colorAccent"/>
+                    android:visibility="gone"
+                    tools:background="@color/colorAccent"
+                    tools:visibility="visible"
+                    />
 
                 <ImageView
                     android:id="@+id/nearby_image_2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:contentDescription="@string/content_desc_nearby_artwork"
                     android:scaleType="centerCrop"
-                    tools:background="@color/colorAccent"/>
+                    android:visibility="gone"
+                    tools:background="@color/colorAccent"
+                    tools:visibility="visible"/>
 
                 <ImageView
                     android:id="@+id/nearby_image_3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:contentDescription="@string/content_desc_nearby_artwork"
                     android:scaleType="centerCrop"
-                    tools:background="@color/colorAccent"/>
+                    android:visibility="gone"
+                    tools:background="@color/colorAccent"
+                    tools:visibility="visible"/>
 
             </LinearLayout>
 
