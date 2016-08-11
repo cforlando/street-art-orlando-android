@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.kaede.tagview.Tag;
@@ -25,13 +26,14 @@ import me.kaede.tagview.TagView;
  */
 public class AddTagsDialog extends DialogFragment {
 
+    @BindColor(R.color.colorAccent)
+    int colorAccent;
+    @BindColor(R.color.colorPrimaryDark)
+    int colorPrimaryDark;
+    @BindColor(R.color.white)
+    int colorWhite;
     @BindView(R.id.edit_tag) EditText editText;
     @BindView(R.id.tagview) TagView tagView;
-
-    public interface AddTagsDialogListener {
-        void onReturnTags(List<Tag> tags);
-    }
-
     AddTagsDialogListener mListener;
 
     @Override
@@ -62,6 +64,8 @@ public class AddTagsDialog extends DialogFragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     if (!editText.getText().toString().equals("")) {
                         Tag tag = new Tag(editText.getText().toString());
+                        tag.tagTextColor = colorWhite;
+                        tag.layoutColor = colorPrimaryDark;
                         tag.isDeletable = true;
                         tagView.addTag(tag);
                         editText.setText("");
@@ -79,13 +83,20 @@ public class AddTagsDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         AddTagsDialogListener activity = (AddTagsDialogListener) getActivity();
                         String text = editText.getText().toString();
-                        Tag tag = new Tag(text);
-                        tag.isDeletable = true;
-                        tagView.addTag(tag);
+                        if (!editText.getText().toString().isEmpty()) {
+                            Tag tag = new Tag(text);
+                            tag.tagTextColor = colorWhite;
+                            tag.layoutColor = colorPrimaryDark;
+                            tagView.addTag(tag);
+                        }
                         activity.onReturnTags(tagView.getTags());
                     }
                 });
 
         return builder.create();
+    }
+
+    public interface AddTagsDialogListener {
+        void onReturnTags(List<Tag> tags);
     }
 }

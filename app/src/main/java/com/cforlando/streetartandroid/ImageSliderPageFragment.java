@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
  * Created by benba on 4/21/2016.
  */
 public class ImageSliderPageFragment extends android.support.v4.app.Fragment {
-    @BindView(R.id.slider_image)
+    @BindView(R.id.image)
     ImageView imageView;
     private String photoUrl;
 

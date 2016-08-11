@@ -1,113 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="NewInstallationActivity"
-    tools:showIn="@layout/activity_new_installation">
+    tools:context="NewInstallationActivity">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+
+    <TextView
+        android:id="@+id/no_tags_tv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#eeeeee"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/margin_medium"
-            android:text="@string/location_label"
-            android:textAppearance="?android:listSeparatorTextViewStyle"/>
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:padding="32dp"
+        android:text="@string/no_tags_yet"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingLeft="@dimen/margin_medium"
-            android:paddingRight="@dimen/margin_medium">
-
-            <LinearLayout
-                android:id="@+id/container_icon_location"
-                android:layout_width="56dp"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:scaleType="center"
-
-                    android:src="@drawable/ic_location_24dp"
-                    />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/address_tv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/container_icon_location"
-                android:gravity="center_vertical"
-                android:text="@string/add_location_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-
-            <ImageButton
-                android:id="@+id/button_search_location"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:background="#00ffffff"
-                android:scaleType="center"
-                android:src="@drawable/places_ic_search"/>
-
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#eeeeee"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/margin_medium"
-            android:text="@string/tags_label"
-            android:textAppearance="?android:listSeparatorTextViewStyle"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium">
+    <me.kaede.tagview.TagView
+        android:id="@+id/tagview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        app:lineMargin="5dp"
+        app:tagMargin="3dp"
+        app:textPaddingBottom="3dp"
+        app:textPaddingLeft="10dp"
+        app:textPaddingRight="10dp"
+        app:textPaddingTop="3dp"
+        tools:background="@color/colorAccent"
+        tools:layout_height="200dp"/>
 
 
-            <me.kaede.tagview.TagView
-                android:id="@+id/tagview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:minHeight="56dp"
-                app:lineMargin="5dp"
-                app:tagMargin="3dp"
-                app:textPaddingBottom="3dp"
-                app:textPaddingLeft="10dp"
-                app:textPaddingRight="10dp"
-                app:textPaddingTop="3dp">
-            </me.kaede.tagview.TagView>
-
-            <EditText
-                android:id="@+id/edit_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/tagview"
-                android:hint="@string/add_tags_label"
-                android:imeActionLabel="Add"
-                android:imeOptions="actionDone"
-                android:inputType="textAutoComplete"
-                app:layout_scrollFlags="snap"/>
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-</android.support.v4.widget.NestedScrollView>
+</LinearLayout>
