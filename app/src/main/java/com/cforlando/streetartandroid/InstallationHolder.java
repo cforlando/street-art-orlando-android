@@ -5,11 +5,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cforlando.streetartandroid.Models.Installation;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -37,11 +36,10 @@ public class InstallationHolder extends RecyclerView.ViewHolder {
 
 
         //Load image into imageView
-        Glide.with(itemView.getContext())
+        Picasso.with(itemView.getContext())
                 .load(installation.getFirstPhotoUrl())
-                .asBitmap()
+                .resize(400, 400)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(photo);
 
         //Load textViews
