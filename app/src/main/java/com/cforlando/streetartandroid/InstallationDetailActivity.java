@@ -20,8 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cforlando.streetartandroid.Models.Installation;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -29,6 +27,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.Iterator;
@@ -262,9 +261,9 @@ public class InstallationDetailActivity extends AppCompatActivity implements Add
                     Installation installation = nearbyInstallations.get(i);
                     String photo = installation.getFirstPhotoUrl();
                     nearbyImageViews.get(i).setVisibility(View.VISIBLE);
-                    Glide.with(InstallationDetailActivity.this)
+                    Picasso.with(InstallationDetailActivity.this)
                             .load(photo)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .fit()
                             .centerCrop()
                             .into(nearbyImageViews.get(i));
                 }

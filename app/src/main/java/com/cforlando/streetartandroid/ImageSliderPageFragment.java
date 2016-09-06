@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,9 +38,10 @@ public class ImageSliderPageFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_page, container, false);
         ButterKnife.bind(this, view);
-        Glide.with(this)
+        Picasso.with(this.getContext())
                 .load(photoUrl)
-                .centerCrop()
+                .resize(1024, 768)
+                .centerInside()
                 .into(imageView);
 
         return view;

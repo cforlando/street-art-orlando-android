@@ -42,11 +42,15 @@ public class MainActivity extends AppCompatActivity  {
 
     @OnClick(R.id.fab)
     public void startPhotoPicker() {
-        Intent intent = new Intent(this, ImagePickerActivity.class);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
-        startActivityForResult(intent, REQUEST_CODE_IMAGE_PICKER);
+        if (ParseUser.getCurrentUser() == null) {
+            showSignInPrompt();
+        } else {
+            Intent intent = new Intent(this, ImagePickerActivity.class);
+            intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+            intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
+            intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
+            startActivityForResult(intent, REQUEST_CODE_IMAGE_PICKER);
+        }
     }
 
     @Override
